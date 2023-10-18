@@ -359,6 +359,8 @@ const long interval = 1000;           // transmission interval (milliseconds)
 
 void setup() {
   Serial.begin(115200);
+  pinMode( 6, OUTPUT);
+  pinMode( LED_BUILTIN, OUTPUT);
   //bool ret = CANInit(CAN_500KBPS, 0);  // CAN_RX mapped to PA11, CAN_TX mapped to PA12
   bool ret = CANInit(CAN_500KBPS, 2);  // CAN_RX mapped to PB8, CAN_TX mapped to PB9
   //bool ret = CANInit(CAN_500KBPS, 3);  // CAN_RX mapped to PD0, CAN_TX mapped to PD1
@@ -369,6 +371,8 @@ void setup() {
 }
 
 void loop() {
+  digitalWrite(6, HIGH);
+  digitalWrite(LED_BUILTIN, HIGH);
   CAN_msg_t CAN_TX_msg;
   CAN_msg_t CAN_RX_msg;
    
@@ -385,17 +389,17 @@ void loop() {
   unsigned long currentMillis = millis();
   if (currentMillis - previousMillis >= interval) {
     previousMillis = currentMillis;
-    if ( ( counter % 2) == 0) {
+    /*if ( ( counter % 2) == 0) {
       CAN_TX_msg.type = DATA_FRAME;
       if (CAN_TX_msg.len == 0) CAN_TX_msg.type = REMOTE_FRAME;
       CAN_TX_msg.format = EXTENDED_FORMAT;
       CAN_TX_msg.id = 0x32F072;
-    } else {
-      CAN_TX_msg.type = DATA_FRAME;
-      if (CAN_TX_msg.len == 0) CAN_TX_msg.type = REMOTE_FRAME;
-      CAN_TX_msg.format = STANDARD_FORMAT;
-      CAN_TX_msg.id = 0x072;
-    }
+    } else {*/
+     CAN_TX_msg.type = DATA_FRAME;
+     if (CAN_TX_msg.len == 0) CAN_TX_msg.type = REMOTE_FRAME;
+     CAN_TX_msg.format = STANDARD_FORMAT;
+     CAN_TX_msg.id = 0x100;
+    //}
     CANSend(&CAN_TX_msg);
     frameLength++;
     if (frameLength == 9) frameLength = 0;
